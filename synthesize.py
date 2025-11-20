@@ -41,6 +41,16 @@ def synthesize_speech(text, voice_id='Joanna', output_format='mp3'):
 
 if __name__ == "__main__":
     # Read text file
+    text = read_text_file()
+    print("Text read successfully!")
+    
     # Call synthesize_speech()
+    audio_bytes = synthesize_speech(text)
+    print("Speech synthesized successfully!")
+    
     # Save to mp3 file
+    with open('output.mp3', 'wb') as f:
+        f.write(audio_bytes)
+    
     # Print confirmation
+    print("Audio saved to output.mp3")
