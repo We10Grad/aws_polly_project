@@ -10,13 +10,13 @@ on:
       - reopened
 
 jobs:
-  deploy-beta:
+  synthesize-and-upload:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -26,13 +26,14 @@ jobs:
         run: pip install boto3
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Deploy to Beta Environment
-        run: |
-          echo "Deploying to Beta environment..."
-          
-        
+      
+      - name: Run synthesize script
+        run: python synthesize.py
+      
+      - name: Upload to S3
+        run: aws s3 cp output.mp3 s3://${{ secrets.S3_BUCKET_BETA }}/polly-audio/beta.mp3
